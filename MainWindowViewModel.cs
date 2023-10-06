@@ -26,7 +26,8 @@ namespace CreatePartMarkForSlab
             {
                 MarkType.ASSEMBLY_POSITION.ToString(),
                 MarkType.ASSEMBLY_POSITION_PROFILE.ToString(),
-                MarkType.TEXT_PROFILE.ToString(),
+                MarkType.PROFILE.ToString(),
+                MarkType.PANEL_NAME.ToString(),
                 MarkType.TEXT.ToString(),
             };
         }
@@ -39,7 +40,7 @@ namespace CreatePartMarkForSlab
             {
                 _slabmarktype = value;
                 if (string.IsNullOrEmpty(_slabmarktype))
-                    _slabmarktype = MarkType.ASSEMBLY_POSITION.ToString();
+                    _slabmarktype = MarkType.ASSEMBLY_POSITION_PROFILE.ToString();
                 switch (_slabmarktype)
                 {
                     case MarkSetting.TEXT:
@@ -84,7 +85,7 @@ namespace CreatePartMarkForSlab
             {
                 _slabLocationIndex = value;
                 if (_slabLocationIndex.IsDefaultValue())
-                    _slabLocationIndex = 0;
+                    _slabLocationIndex = 1;
                 OnPropertyChanged();
             }
         }

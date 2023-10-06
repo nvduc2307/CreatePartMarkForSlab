@@ -6,6 +6,7 @@ using TeklaDev;
 using tsd = Tekla.Structures.Drawing;
 using tsm = Tekla.Structures.Model;
 using TD = Tekla.Structures.Datatype;
+using System.Linq;
 
 namespace CreatePartMarkForSlab
 {
@@ -19,7 +20,7 @@ namespace CreatePartMarkForSlab
         private DataStructure _data;
 
         //config slab mark
-        private string _slabmarktype = MarkType.ASSEMBLY_POSITION.ToString();
+        private string _slabmarktype = MarkType.ASSEMBLY_POSITION_PROFILE.ToString();
         private string _slabprefix = MarkType.TEXT.ToString();
         private bool _slabprefixaction = true;
         private int _slabLocationIndex = 0;
@@ -78,25 +79,32 @@ namespace CreatePartMarkForSlab
             {
                 GetValuesFromDialog();
                 var cmodel = new tsm.Model();
-                var viewBase = InputDefinitionFactory.GetView(inputs[0]);
+                var viewBase = InputDefinitionFactory.GetView(inputs[0]) as tsd.ViewBase;
                 var view = viewBase as tsd.View;
                 if (view != null)
                 {
-                    var beams = view.GetBeamsInDrawingAtView(cmodel, tsm.Beam.BeamTypeEnum.BEAM);
-                    var walls = view.GetBeamsInDrawingAtView(cmodel, tsm.Beam.BeamTypeEnum.PANEL);
+                    //var beams = view.GetBeamsInDrawingAtView(cmodel, tsm.Beam.BeamTypeEnum.BEAM);
+                    //var walls = view.GetBeamsInDrawingAtView(cmodel, tsm.Beam.BeamTypeEnum.PANEL);
                     var slabs = view.GetSlabsInDrawingAtView(cmodel, tsm.ContourPlate.ContourPlateTypeEnum.SLAB);
-                    beams.ForEach(beam =>
-                    {
-                        beam.CreatePartMark(cmodel, viewBase, ExtDrawingPartMark.PointInsertMark.MiddlePart, MarkType.ASSEMBLY_POSITION_PROFILE);
-                    });
-                    walls.ForEach(wall =>
-                    {
-                        wall.CreatePartMark(cmodel, viewBase, ExtDrawingPartMark.PointInsertMark.MiddlePart, MarkType.ASSEMBLY_POSITION_PROFILE);
-                    });
-                    slabs.ForEach(slab =>
-                    {
-                        slab.CreatePartMark(cmodel, viewBase, ExtDrawingPartMark.PointInsertMark.MiddlePart, MarkType.ASSEMBLY_POSITION_PROFILE);
-                    });
+                    //beams.ForEach(beam =>
+                    //{
+                    //    beam.CreatePartMark(cmodel, viewBase, ExtDrawingPartMark.PointInsertMark.MiddlePart, MarkType.ASSEMBLY_POSITION_PROFILE);
+                    //});
+                    //walls.ForEach(wall =>
+                    //{
+                    //    wall.CreatePartMark(cmodel, viewBase, ExtDrawingPartMark.PointInsertMark.MiddlePart, MarkType.ASSEMBLY_POSITION_PROFILE);
+                    //});
+                    var typeMark = _slabmarktype.TransformTextToMarkType();
+                    var prefix = _slabprefix;
+                    var locationMark = _slabLocationIndex.TransformIntToLocationMark();
+                    var extendMark = _slabExtendMark;
+                    var angleMark = _slabAngleMark;
+
+                    viewBase.CreatePartMark(cmodel, typeMark, prefix, extendMark, angleMark);
+                    //slabs.ForEach(slab =>
+                    //{
+                    //    slab.CreatePartMark(cmodel, viewBase, locationMark, typeMark, prefix, extendMark, angleMark);
+                    //});
                     cmodel.CommitChanges();
                 }
             }
@@ -120,7 +128,7 @@ namespace CreatePartMarkForSlab
 
             //slab
             if (IsDefaultValue(_slabmarktype))
-                _slabmarktype = MarkType.ASSEMBLY_POSITION.ToString();
+                _slabmarktype = MarkType.ASSEMBLY_POSITION_PROFILE.ToString();
             if (IsDefaultValue(_slabprefix))
                 _slabprefix = MarkType.TEXT.ToString();
             if (IsDefaultValue(_slabLocationIndex))

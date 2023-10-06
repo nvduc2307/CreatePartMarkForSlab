@@ -62,7 +62,7 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     AttributeName="slabmarktype" />
-                                    <ComboBox
+                                <ComboBox
                                     x:Name="slabmarktype"
                                     Width="200"
                                     VerticalAlignment="Center"
@@ -121,10 +121,11 @@
                                 VerticalAlignment="Center"
                                 Content="Mark Location"/>
                             <StackPanel 
-                                    Grid.Column="1" 
-                                    VerticalAlignment="Center" 
-                                    Orientation="Horizontal">
-                                    <UIControls:WpfFilterCheckBox
+                                Grid.Column="1" 
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                                <UIControls:WpfFilterCheckBox
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     AttributeName="slablocationmark" />
@@ -132,6 +133,7 @@
                                     x:Name="slablocationmark"
                                     Width="200"
                                     VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Left"
                                     SelectedIndex="{Binding Path=Slablocationindex, Mode=TwoWay}">
                                     <TextBlock Text="TopPart" HorizontalAlignment="Left"/>
                                     <TextBlock Text="MiddlePart" HorizontalAlignment="Left"/>

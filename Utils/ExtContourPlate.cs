@@ -2,11 +2,27 @@
 using System.Collections.Generic;
 using tsm = Tekla.Structures.Model;
 using tsd = Tekla.Structures.Drawing;
+using tsg = Tekla.Structures.Geometry3d;
 
 namespace TeklaDev
 {
     public static class ExtContourPlate
     {
+        public static tsm.ContourPlate CreateContourBooleanPart(this List<tsg.Point> polygons, string profile = "PL200")
+        {
+            var contourPoints = polygons
+                .Select(p => new tsm.ContourPoint(new tsg.Point(p.X, p.Y, p.Z), null));
+
+            var cp = new tsm.ContourPlate();
+            cp.Finish = "BooleanPart";
+            cp.Profile.ProfileString = profile;
+            cp.Material.MaterialString = "Steel_Undefined";
+            cp.Class = tsm.BooleanPart.BooleanOperativeClassName;
+            cp.Position.Depth = tsm.Position.DepthEnum.FRONT;
+            bool result = false;
+            result = cp.Insert();
+            return cp;
+        }
         public static List<tsm.ContourPlate> GetSlabsInModel(this tsm.Model cmodel, tsm.ContourPlate.ContourPlateTypeEnum contourType, string name = "", string prefix = "")
         {
             var objEnumerator = cmodel.GetModelObjectSelector()

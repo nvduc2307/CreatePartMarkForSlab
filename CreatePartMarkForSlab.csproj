@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Utils\ExtArrayList.cs" />
     <Compile Include="Utils\ExtBeam.cs" />
+    <Compile Include="Utils\ExtBooleanPart.cs" />
     <Compile Include="Utils\ExtContourPlate.cs" />
     <Compile Include="Utils\ExtFace3.cs" />
     <Compile Include="Utils\ExtMainWindowViewModel.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Utils\ExtSelectElement.cs" />
     <Compile Include="Utils\ExtSolid.cs" />
     <Compile Include="Utils\ExtUDAs\ExtUDA.cs" />
+    <Compile Include="Utils\ExtVector.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\ViewModelBase.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
