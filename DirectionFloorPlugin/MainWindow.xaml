@@ -10,6 +10,7 @@
     mc:Ignorable="d"
     ResizeMode="NoResize"
     Height="300" Width="600"
+    Title="Slab Direction"
     >
     <d:Window.DataContext>
         <local:MainWindowViewModel />

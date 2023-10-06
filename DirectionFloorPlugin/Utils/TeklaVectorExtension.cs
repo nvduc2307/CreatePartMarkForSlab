@@ -8,6 +8,9 @@ namespace DirectionFloorPlugin.Utils
 {
 	public static class TeklaVectorExtension
 	{
+		public static readonly Vector GlobalX = new Vector(1, 0, 0);
+		public static readonly Vector GlobalY = new Vector(0, 1, 0);
+		public static readonly Vector GlobalZ = new Vector(0, 0, 1);
 		public static Vector Reverse(this Vector vector)
 		{
 			return new Vector(-vector.X, -vector.Y, -vector.Z);
@@ -33,6 +36,22 @@ namespace DirectionFloorPlugin.Utils
 			var p1New = Projection.PointToPlane(p1, plane);
 			var p2New = Projection.PointToPlane(p2, plane);
 			return new Vector(p2New.Subtract(p1New)).GetNormal();
+		}
+
+		public static Vector RayToPlane(this Vector vec, Vector vecRay, GeometricPlane plane)
+		{
+			var result = new Vector();
+
+			var p1 = new Point();
+			var p2 = p1.Add(vec, 1);
+			var p1New = p1.RayToPlane(vecRay, plane);
+			var p2New = p2.RayToPlane(vecRay, plane);
+			if (p1New != null && p2New != null)
+			{
+				result = new Vector(p2New.Subtract(p1New)).GetNormal();
+			}
+
+			return result;
 		}
 
 		public static bool IsParallel(this Vector v1, Vector v2)

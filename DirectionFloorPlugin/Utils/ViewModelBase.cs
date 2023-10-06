@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Tekla.Structures.Internal;
 
 namespace DirectionFloorPlugin.Utils
 {
@@ -10,5 +11,16 @@ namespace DirectionFloorPlugin.Utils
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
+
+
+        //For Tekla
+		public bool IsDefaultValue(double Value)
+		{
+			return Value == (double)StructuresDataStorage.DEFAULT_VALUE;
+		}
+		public bool IsDefaultValue(int Value)
+		{
+			return Value == StructuresDataStorage.DEFAULT_VALUE;
+		}
+	}
 }

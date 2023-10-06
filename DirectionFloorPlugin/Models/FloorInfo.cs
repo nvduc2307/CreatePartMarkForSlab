@@ -118,7 +118,7 @@ namespace DirectionFloorPlugin.Models
 			{
 				var coordinate = MainModelObject.GetCoordinateSystem();
 				var localx = coordinate.AxisX.GetNormal();
-				var localy = localx.Cross(new Vector(0, 0, -1)).GetNormal();
+				var localy = localx.Cross(TeklaVectorExtension.GlobalZ.Reverse()).GetNormal();
 				var localz = localx.Cross(localy).GetNormal();
 
 				Normal = localz.GetNormal();
