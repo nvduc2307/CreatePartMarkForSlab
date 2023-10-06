@@ -10,5 +10,7 @@ namespace DirectionFloorPlugin
 		public int DirectionIndex;
 		[StructuresField("type")]
 		public int TypeIndex;
+		[StructuresField("slabname")]
+		public string SlabName;
 	}
 }

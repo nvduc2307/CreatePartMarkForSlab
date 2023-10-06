@@ -10,6 +10,7 @@ using Tekla.Structures.Model.UI;
 using Tekla.Structures.Plugins;
 using DirectionFloorPlugin.Models;
 using DirectionFloorPlugin.Utils;
+using System.Windows.Controls;
 
 namespace DirectionFloorPlugin
 {
@@ -17,9 +18,13 @@ namespace DirectionFloorPlugin
 	[PluginUserInterface("DirectionFloorPlugin.MainWindow")]
 	public class DirectionFloorPlugin : PluginBase
 	{
+		private const string UDA_SLABNAME = "PANEL NAME";
+
 		private double _angle = 0.0;
 		private int _directionIndex = 0;
 		private int _typeIndex = 0;
+		private string _slabName = "";
+
 
 		public Model Model { get; set; }
 		public PluginData Data { get; set; }
@@ -34,7 +39,7 @@ namespace DirectionFloorPlugin
 			List<InputDefinition> inputs = new List<InputDefinition>();
 
 			Picker Picker = new Picker();
-			var obj = Picker.PickObject(Picker.PickObjectEnum.PICK_ONE_OBJECT, "Pick object");
+			var obj = Picker.PickObject(Picker.PickObjectEnum.PICK_ONE_OBJECT, "Pick slab");
 			inputs.Add(new InputDefinition(obj.Identifier));
 
 			return inputs;
@@ -42,75 +47,83 @@ namespace DirectionFloorPlugin
 
 		public override bool Run(List<InputDefinition> Input)
 		{
-			var result = false;
-
 			try
 			{
 				GetValuesFromDialog();
+
 				var id = Input[0].GetInput();
 				var ob = Model.SelectModelObject(id as Tekla.Structures.Identifier);
-				var floor = ob as ContourPlate;
-				if (floor != null)
+				if (!FloorInfo.ModelObjectIsValid(ob))
 				{
-					var floorInfor = new FloorInfo(floor);
-					t3d.Vector direction = null;
-					switch (_directionIndex)
-					{
-						case 0:
-							direction = floorInfor.LocalShort;
-							break;
-						case 1:
-							direction = floorInfor.LocalLong;
-							break;
-						case 2://global X
-							direction = new t3d.Vector(1, 0, 0).ProjectToPlane(floorInfor.Plane);
-							break;
-						case 3://global y
-							direction = new t3d.Vector(0, 1, 0).ProjectToPlane(floorInfor.Plane);
-							break;
-					}
-
-					direction = direction.Rotate(floorInfor.Normal, (_angle / 180) * Math.PI);
-					var profile = floorInfor.GetProfileDirection(direction, FloorInfo.LENGHT_SHORT_DIRECTION, FloorInfo.LENGHT_HEAD_DIRECTION);
-					var controlLines = profile.InitControlLines();
-					controlLines.ForEach(x => x.Insert());
-
-					if (_typeIndex == 1) //add long direction
-					{
-						var directionLong = direction.Cross(floorInfor.Normal).GetNormal();
-						var profileLong = floorInfor.GetProfileDirection(directionLong, FloorInfo.LENGHT_LONG_DIRECTION, FloorInfo.LENGHT_HEAD_DIRECTION);
-						var controlLineLongs = profileLong.InitControlLines();
-						controlLineLongs.ForEach(x => x.Insert());
-					}
-
-					result = true;
+					MessageBox.Show("Part must be ContourPlate/Beam/Panel");
+					return false;
 				}
-				else
+				var floorInfor = new FloorInfo(ob as Part);
+				t3d.Vector directionShort = null;
+				switch (_directionIndex)
 				{
-					MessageBox.Show("Part must be ContourPlate");
+					case 0:
+						directionShort = floorInfor.LocalShort;
+						break;
+					case 1:
+						directionShort = floorInfor.LocalLong;
+						break;
+					case 2://Global X
+						directionShort = new t3d.Vector(1, 0, 0).ProjectToPlane(floorInfor.Plane);
+						break;
+					case 3://Global Y
+						directionShort = new t3d.Vector(0, 1, 0).ProjectToPlane(floorInfor.Plane);
+						break;
 				}
+
+				directionShort = directionShort.Rotate(floorInfor.Normal, (_angle / 180) * Math.PI);
+				var profile = floorInfor.GetProfileDirection(directionShort, FloorInfo.LENGHT_SHORT_DIRECTION);
+				var floor1 = profile.InitContourPalte();
+				floor1.Insert();
+				var partcut1 = floorInfor.MainModelObject.InitPartCut(floor1);
+				partcut1.Insert();
+				floor1.Delete();
+				var r1 = partcut1.SetUserProperty(UDA_SLABNAME, _slabName);
+
+				if (_typeIndex == 1) //Add long direction
+				{
+					var directionLong = directionShort.Cross(floorInfor.Normal).GetNormal();
+					var profileLong = floorInfor.GetProfileDirection(directionLong, FloorInfo.LENGHT_LONG_DIRECTION);
+					var floor2 = profileLong.InitContourPalte();
+					floor2.Insert();
+					var partcut2 = floorInfor.MainModelObject.InitPartCut(floor2);
+					partcut2.Insert();
+					floor2.Delete();
+					var r2 = partcut2.SetUserProperty(UDA_SLABNAME, _slabName);
+				}
+
 				Operation.DisplayPrompt("Selected components");
+				return true;
 			}
 			catch (Exception Exc)
 			{
 				MessageBox.Show(Exc.ToString());
+				return false;
 			}
-
-			return result;
 		}
 
 		private void GetValuesFromDialog()
 		{
 			_directionIndex = Data.DirectionIndex;
-			_typeIndex = Data.TypeIndex;
-			_angle = Data.Angle;
-
 			if (IsDefaultValue(_directionIndex))
 				_directionIndex = 0;
+
+			_typeIndex = Data.TypeIndex;
 			if (IsDefaultValue(_typeIndex))
 				_typeIndex = 0;
+
+			_angle = Data.Angle;
 			if (IsDefaultValue(_angle))
 				_angle = 0.0;
+
+			_slabName = Data.SlabName;
+			if (IsDefaultValue(_slabName))
+				_slabName = "";
 		}
 	}
 }

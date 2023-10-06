@@ -1,97 +1,147 @@
 ﻿using DirectionFloorPlugin.Utils;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using Tekla.Structures.Geometry3d;
 using Tekla.Structures.Model;
-using Tekla.Structures.Model.Geometry;
 
 namespace DirectionFloorPlugin.Models
 {
 	public class FloorInfo
 	{
+		private List<Point> _pointsOnTopFace = new List<Point>();
+
 		public const double LENGHT_SHORT_DIRECTION = 1500;
 		public const double LENGHT_LONG_DIRECTION = 3000;
-		public const double LENGHT_HEAD_DIRECTION = 300;
+		public const double LENGHT_HOOK_DIRECTION = 200;
+		public const double LENGHT_WIDTH_DIRECTION = 50;
 
-		public ContourPlate Floor { get; private set; }
+		public Part MainModelObject { get; private set; }
 		public Vector LocalShort { get; private set; }
 		public Vector LocalLong { get; private set; }
 		public GeometricPlane Plane { get; private set; }
-		public Vector Normal => LocalShort.Cross(LocalLong).GetNormal();
+		public Vector Normal { get; private set; }
 
-		public FloorInfo(ContourPlate contourPlate)
+		public FloorInfo(Part modelObject)
 		{
-			Floor = contourPlate;
+			MainModelObject = modelObject;
 			InitData();
 		}
 
-		public List<Point> GetProfileDirection(Vector dir, double len = LENGHT_SHORT_DIRECTION, double lenHead = LENGHT_HEAD_DIRECTION)
+		public List<Point> GetProfileDirection(Vector dir, double len = LENGHT_SHORT_DIRECTION, double lenHook = LENGHT_HOOK_DIRECTION, double lenWid = LENGHT_WIDTH_DIRECTION)
 		{
-			var pCenter = GetCenter();
-			var p2 = pCenter.Add(dir.Reverse(), len / 2);
-			var p3 = pCenter.Add(dir, len / 2);
-			var dir45 = dir.Rotate(Normal, Math.PI / 4);
-			var dir_45 = dir.Rotate(Normal, -3 * Math.PI / 4);
-			var p1 = p2.Add(dir45, lenHead);
-			var p4 = p3.Add(dir_45, lenHead);
+			var vecx = dir.GetNormal();
+			var vecy = vecx.Cross(Normal.Reverse()).GetNormal();
 
-			return new List<Point>() { p1, p2, p3, p4 };
+			//part1
+			var p1 = GetCenter();
+			p1 = p1.Add(vecy, lenWid / 2);
+			p1 = p1.Add(vecx, len / 2);
+			var p2 = p1.Add(vecx.Reverse(), len - lenWid);
+			var p3 = p2.Add(vecy, lenHook);
+
+			//part2
+			var p1_1 = GetCenter();
+			p1_1 = p1_1.Add(vecy.Reverse(), lenWid / 2);
+			p1_1 = p1_1.Add(vecx.Reverse(), len / 2);
+			var p1_2 = p1_1.Add(vecx, len - lenWid);
+			var p1_3 = p1_2.Add(vecy.Reverse(), lenHook);
+
+			return new List<Point>() { p1, p2, p3, p1_1, p1_2, p1_3 };
 		}
 
 		public Point GetCenter()
 		{
-			var result = new Point();
+			return _pointsOnTopFace.GetCenter();
+		}
 
-			var points = Floor.Contour.ContourPoints.ToArray().Cast<Point>().ToList();
-			for (int i = 0; i < points.Count; i++)
+		public static bool ModelObjectIsValid(ModelObject modelObject)
+		{
+			bool result = false;
+			if (modelObject is ContourPlate)
 			{
-				result += points[i];
+				result = true;
 			}
-			result = result.Divide(points.Count);
-
+			if (modelObject is Beam beam)
+			{
+				if (beam.GetCoordinateSystem().AxisX.IsParallel(new Vector(0, 0, 1)))
+				{
+					result = false;
+				}
+				else
+				{
+					result = true;
+				}
+			}
 			return result;
 		}
 
 		private void InitData()
 		{
-			var coordinate = Floor.GetCoordinateSystem();
-			var localx = coordinate.AxisX;
-			var localy = coordinate.AxisY;
-			var points = Floor.Contour.ContourPoints.ToArray().Cast<Point>().ToList();
-
-			var distX = GetDistancePointsByVector(points, localx);
-			var distY = GetDistancePointsByVector(points, localy);
-
-			if (distX <= distY)
+			if (MainModelObject is ContourPlate contourPlate)
 			{
-				LocalShort = localx.GetNormal();
-				LocalLong = localy.GetNormal();
-			}
-			else
-			{
-				LocalShort = localy.GetNormal();
-				LocalLong = localx.GetNormal();
-			}
-			Plane = new GeometricPlane(points.FirstOrDefault(), Normal);
-		}
-		private double GetDistancePointsByVector(List<Point> ps, Vector vec)
-		{
-			var result = double.NaN;
+				var coordinate = MainModelObject.GetCoordinateSystem();
+				var localx = coordinate.AxisX.GetNormal();
+				var localy = coordinate.AxisY.GetNormal();
+				var localz = localx.Cross(localy).GetNormal();
 
-			var pMin = ps.OrderBy(p => p.AsVector().Dot(vec)).FirstOrDefault();
-			var pMax = ps.OrderBy(p => p.AsVector().Dot(vec)).LastOrDefault();
-			if (pMin != null && pMax != null)
-			{
-				result = pMax.AsVector().Dot(vec) - pMin.AsVector().Dot(vec);
-			}
+				Normal = localx.Cross(localy).GetNormal();
+				var solid = contourPlate.GetSolid();
+				var points = solid.GetAllPoints();
+				var pointTop = points.OrderBy(p => p.AsVector().Dot(localz)).LastOrDefault();
 
-			return result;
+				Plane = new GeometricPlane(pointTop, Normal);
+				_pointsOnTopFace = contourPlate.Contour.ContourPoints
+					.ToArray()
+					.Cast<Point>()
+					.Where(p => p != null)
+					.ToList()
+					.Select(p => Projection
+					.PointToPlane(p, Plane))
+					.ToList();
+
+				var distX = _pointsOnTopFace.GetDistancePointsByVector(localx);
+				var distY = _pointsOnTopFace.GetDistancePointsByVector(localy);
+				if (distX <= distY)
+				{
+					LocalShort = localx.GetNormal();
+					LocalLong = localy.GetNormal();
+				}
+				else
+				{
+					LocalShort = localy.GetNormal();
+					LocalLong = localx.GetNormal();
+				}
+			}
+			else if (MainModelObject is Beam beam)
+			{
+				var coordinate = MainModelObject.GetCoordinateSystem();
+				var localx = coordinate.AxisX.GetNormal();
+				var localy = localx.Cross(new Vector(0, 0, -1)).GetNormal();
+				var localz = localx.Cross(localy).GetNormal();
+
+				Normal = localz.GetNormal();
+				var solid = beam.GetSolid();
+				var points = solid.GetAllPoints();
+				var pointTop = points.OrderBy(p => p.AsVector().Dot(localz)).LastOrDefault();
+
+				Plane = new GeometricPlane(pointTop, Normal);
+				_pointsOnTopFace = points.Select(p => Projection.PointToPlane(p, Plane)).ToList();
+
+				var distX = _pointsOnTopFace.GetDistancePointsByVector(localx);
+				var distY = _pointsOnTopFace.GetDistancePointsByVector(localy);
+				if (distX <= distY)
+				{
+					LocalShort = localx.GetNormal();
+					LocalLong = localy.GetNormal();
+				}
+				else
+				{
+					LocalShort = localy.GetNormal();
+					LocalLong = localx.GetNormal();
+				}
+			}
 		}
 	}
 }

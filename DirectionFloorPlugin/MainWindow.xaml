@@ -37,7 +37,7 @@
                     Height="30"                   
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="Direction" />
+                    Content="Direction:" />
                 <UIControls:WpfFilterCheckBox
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -50,10 +50,10 @@
                     VerticalAlignment="Center"                  
                     SelectedIndex="{Binding DirectionIndex, Mode=TwoWay}"
                     >
-                    <TextBlock Text="Local short" TextAlignment="Left"/>
-                    <TextBlock Text="Local long" TextAlignment="Left"/>
-                    <TextBlock Text="Global X" TextAlignment="Left"/>
-                    <TextBlock Text="Global Y" TextAlignment="Left"/>
+                    <TextBlock Text="Slab Short Direction" TextAlignment="Center"/>
+                    <TextBlock Text="Slab Long Direction" TextAlignment="Center"/>
+                    <TextBlock Text="Global X" TextAlignment="Center"/>
+                    <TextBlock Text="Global Y" TextAlignment="Center"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -62,7 +62,7 @@
                     Height="30"                   
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="Type" />
+                    Content="Type:" />
                 <UIControls:WpfFilterCheckBox
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -75,8 +75,8 @@
                     VerticalAlignment="Center"
                     SelectedIndex="{Binding TypeIndex, Mode=TwoWay}"
                     >
-                    <TextBlock Text="One Way" TextAlignment="Left"/>
-                    <TextBlock Text="Two Way" TextAlignment="Left"/>
+                    <TextBlock Text="One Way" TextAlignment="Center"/>
+                    <TextBlock Text="Two Way" TextAlignment="Center"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -85,7 +85,7 @@
                     Height="30"                   
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="Angle" />
+                    Content="Angle:" />
                 <UIControls:WpfFilterCheckBox
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -104,17 +104,17 @@
                     Height="30"                   
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="UDA" />
+                    Content="Slab Name:" />
                 <UIControls:WpfFilterCheckBox
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    AttributeName="uda" />
+                    AttributeName="slabname"/>
                 <TextBox
                     Width="150"
                     Height="23"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Text="{Binding UDA, Mode=TwoWay}"
+                    Text="{Binding SlabName, Mode=TwoWay}"
                     TextWrapping="Wrap" />
             </StackPanel>
         </StackPanel>

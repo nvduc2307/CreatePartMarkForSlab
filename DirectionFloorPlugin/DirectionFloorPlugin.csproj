@@ -80,8 +80,11 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\PointComparer.cs" />
     <Compile Include="Utils\TeklaModelWorkPlaneExtension.cs" />
+    <Compile Include="Utils\TeklaPartCutExtension.cs" />
     <Compile Include="Utils\TeklaPointExtensions.cs" />
+    <Compile Include="Utils\TeklaSolidExtensions.cs" />
     <Compile Include="Utils\TeklaVectorExtension.cs" />
     <Compile Include="Utils\ViewModelBase.cs" />
   </ItemGroup>

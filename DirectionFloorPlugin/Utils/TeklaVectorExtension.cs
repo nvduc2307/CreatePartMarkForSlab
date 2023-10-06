@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Tekla.Structures.Datatype;
 using Tekla.Structures.Geometry3d;
 using Tekla.Structures.Model;
@@ -32,6 +33,19 @@ namespace DirectionFloorPlugin.Utils
 			var p1New = Projection.PointToPlane(p1, plane);
 			var p2New = Projection.PointToPlane(p2, plane);
 			return new Vector(p2New.Subtract(p1New)).GetNormal();
+		}
+
+		public static bool IsParallel(this Vector v1, Vector v2)
+		{
+			var result = false;
+
+			var angle = v1.GetAngleBetween(v2);
+			if (Math.Abs(angle) < 1.0e-6 || Math.Abs(angle - Math.PI) < 1.0e-6)
+			{
+				result = true;
+			}
+
+			return result;
 		}
 	}
 }
