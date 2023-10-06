@@ -1,0 +1,221 @@
+﻿<tsd:PluginWindowBase x:Class="CreatePartMarkForSlab.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:UIControls="clr-namespace:Tekla.Structures.Dialog.UIControls;assembly=Tekla.Structures.Dialog"
+        xmlns:tsd="clr-namespace:Tekla.Structures.Dialog;assembly=Tekla.Structures.Dialog"
+        xmlns:local="clr-namespace:CreatePartMarkForSlab"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="550">
+    <d:UserControl.DataContext>
+        <local:MainWindowViewModel/>
+    </d:UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MinHeight="48" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" MinHeight="48" />
+        </Grid.RowDefinitions>
+        <UIControls:WpfSaveLoad
+            Grid.Row="0"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top" />
+        <Grid Name="MainContent" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0" />
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <GroupBox 
+                Header="Setting Slab Mark"
+                Grid.Column="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel 
+                        Grid.Row="0" 
+                        Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="Mark Type"/>
+                            <StackPanel 
+                                Grid.Column="1" 
+                                VerticalAlignment="Center" 
+                                Orientation="Horizontal">
+                                <UIControls:WpfFilterCheckBox
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    AttributeName="slabmarktype" />
+                                    <ComboBox
+                                    x:Name="slabmarktype"
+                                    Width="200"
+                                    VerticalAlignment="Center"
+                                    ItemsSource="{Binding Slabmarktypes}"
+                                    SelectedValue="{Binding Path=Slabmarktype, Mode=TwoWay}">
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel 
+                        Grid.Row="1" 
+                        Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Width="100"
+                                Height="30"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="Prefix" />
+                            <StackPanel 
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                                <UIControls:WpfFilterCheckBox
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    AttributeName="slabprefix" />
+                                <TextBox
+                                    x:Name="slabprefix"
+                                    Width="200"
+                                    Height="23"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Slabprefix, Mode=TwoWay}"
+                                    IsEnabled="{Binding Slabprefixaction}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel 
+                        Grid.Row="2" 
+                        Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="Mark Location"/>
+                            <StackPanel 
+                                    Grid.Column="1" 
+                                    VerticalAlignment="Center" 
+                                    Orientation="Horizontal">
+                                    <UIControls:WpfFilterCheckBox
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    AttributeName="slablocationmark" />
+                                <ComboBox
+                                    x:Name="slablocationmark"
+                                    Width="200"
+                                    VerticalAlignment="Center"
+                                    SelectedIndex="{Binding Path=Slablocationindex, Mode=TwoWay}">
+                                    <TextBlock Text="TopPart" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="MiddlePart" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="BottomPart" HorizontalAlignment="Left"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel 
+                    Grid.Row="3" 
+                    Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Width="100"
+                                Height="30"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="Mark Extend" />
+                            <StackPanel 
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                                <UIControls:WpfFilterCheckBox
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    AttributeName="slabextendmark" />
+                                <TextBox
+                                    x:Name="slabextendmark"
+                                    Width="200"
+                                    Height="23"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Slabextendmark, Mode=TwoWay}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel 
+                        Grid.Row="4" 
+                        Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Width="100"
+                                Height="30"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="Mark Angle" />
+                            <StackPanel 
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                                <UIControls:WpfFilterCheckBox
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    AttributeName="slabanglemark" />
+                                <TextBox
+                                    x:Name="slabanglemark"
+                                    Width="200"
+                                    Height="23"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Slabanglemark, Mode=TwoWay}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <UIControls:WpfOkApplyModifyGetOnOffCancel
+            Grid.Row="2"
+            ApplyClicked="WPFOkApplyModifyGetOnOffCancel_ApplyClicked"
+            CancelClicked="WPFOkApplyModifyGetOnOffCancel_CancelClicked"
+            GetClicked="WPFOkApplyModifyGetOnOffCancel_GetClicked"
+            ModifyClicked="WPFOkApplyModifyGetOnOffCancel_ModifyClicked"
+            OkClicked="WPFOkApplyModifyGetOnOffCancel_OkClicked"
+            OnOffClicked="WPFOkApplyModifyGetOnOffCancel_OnOffClicked"/>
+    </Grid>
+</tsd:PluginWindowBase>
