@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatePartMarkForSlab", "CreatePartMarkForSlab.csproj", "{8470F5DD-38EF-44D8-8213-CCD89B21F795}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectionFloorPlugin", "DirectionFloorPlugin\DirectionFloorPlugin.csproj", "{2A229AA3-4001-4CB1-A889-2E2E7E7FBC85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8470F5DD-38EF-44D8-8213-CCD89B21F795}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8470F5DD-38EF-44D8-8213-CCD89B21F795}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8470F5DD-38EF-44D8-8213-CCD89B21F795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A229AA3-4001-4CB1-A889-2E2E7E7FBC85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A229AA3-4001-4CB1-A889-2E2E7E7FBC85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A229AA3-4001-4CB1-A889-2E2E7E7FBC85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A229AA3-4001-4CB1-A889-2E2E7E7FBC85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
