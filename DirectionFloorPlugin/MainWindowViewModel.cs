@@ -15,7 +15,12 @@ namespace DirectionFloorPlugin
 		public double Angle
 		{
 			get { return _angle; }
-			set { _angle = value; OnPropertyChanged(); }
+			set
+			{
+				if (!IsDefaultValue(value))
+					_angle = value;
+				OnPropertyChanged();
+			}
 		}
 
 		private int _directionIndex = 0;
@@ -23,7 +28,12 @@ namespace DirectionFloorPlugin
 		public int DirectionIndex
 		{
 			get { return _directionIndex; }
-			set { _directionIndex = value; OnPropertyChanged(); }
+			set
+			{
+				if (!IsDefaultValue(value))
+					_directionIndex = value;
+				OnPropertyChanged();
+			}
 		}
 
 		private int _typeIndex = 0;
@@ -31,7 +41,12 @@ namespace DirectionFloorPlugin
 		public int TypeIndex
 		{
 			get { return _typeIndex; }
-			set { _typeIndex = value; OnPropertyChanged(); }
+			set
+			{
+				if (!IsDefaultValue(value))
+					_typeIndex = value;
+				OnPropertyChanged();
+			}
 		}
 
 		private string _slabName = "";
