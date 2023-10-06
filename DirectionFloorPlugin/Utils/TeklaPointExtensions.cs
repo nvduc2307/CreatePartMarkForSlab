@@ -77,7 +77,7 @@ namespace DirectionFloorPlugin.Utils
 			return controlLines;
 		}
 
-		public static ContourPlate InitContourPalte(this List<Point> polygons, string profile = "PL5")
+		public static ContourPlate InitContourPalte(this List<Point> polygons, string profile = "PL1")
 		{
 			var contourPoints = polygons.Select(p => new ContourPoint(new Point(p.X, p.Y, p.Z), null)).ToList();
 			var cp = new ContourPlate();
