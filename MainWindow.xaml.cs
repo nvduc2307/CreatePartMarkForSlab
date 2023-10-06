@@ -8,11 +8,11 @@ namespace CreatePartMarkForSlab
     /// </summary>
     public partial class MainWindow : PluginWindowBase
     {
-        public MainWindowViewModel dataModel;
-        public MainWindow(MainWindowViewModel DataModel)
+        public MainWindowViewModel _dataModel;
+        public MainWindow(MainWindowViewModel dataModel)
         {
             InitializeComponent();
-            dataModel = DataModel;
+            _dataModel = dataModel;
         }
         private void WPFOkApplyModifyGetOnOffCancel_ApplyClicked(object sender, EventArgs e)
         {
@@ -43,6 +43,11 @@ namespace CreatePartMarkForSlab
         private void WPFOkApplyModifyGetOnOffCancel_OnOffClicked(object sender, EventArgs e)
         {
             this.ToggleSelection();
+        }
+
+        private void WpfSaveLoad_AttributesSaveClicked(object sender, EventArgs e)
+        {
+            this.SaveValues("DirectionFloorModel");
         }
     }
 }

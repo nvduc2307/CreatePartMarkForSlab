@@ -1,5 +1,7 @@
 ﻿using CreatePartMarkForSlab.Utils;
+using System.Collections.Generic;
 using Tekla.Structures.Drawing;
+using Tekla.Structures.Model;
 using tsd = Tekla.Structures.Drawing;
 using tsg = Tekla.Structures.Geometry3d;
 using tsm = Tekla.Structures.Model;
@@ -9,49 +11,30 @@ namespace TeklaDev
     public static class ExtDrawingPartMark
     {
         public static void CreatePartMark(
-            this tsd.ViewBase viewBase,
-            tsm.Model cmodel,
+            this tsd.ModelObject drawingModel,
+            BooleanPart booleanPart,
+            tsg.Point p_mark1,
+            tsg.Point p_mark2,
             MarkType markType,
             string prefix = "",
             double extend = 0.0,
             double angle = 0.0)
         {
-            var booleanParts = cmodel.GetBooleanPartsInModel(tsm.BooleanPart.BooleanTypeEnum.BOOLEAN_CUT);
-            booleanParts.ForEach(booleanPart =>
-            {
-                var modelPark = booleanPart.Father as tsm.Part;
-                var drawingModelObjs = viewBase.GetModelObjects(modelPark.Identifier);
-                while (drawingModelObjs.MoveNext())
-                {
-                    if (drawingModelObjs.Current is tsd.Part dModelObj)
-                    {
-                        tsg.CoordinateSystem pointsCoordinate = null;
-                        var points = booleanPart.GetPointOnTopShellFace(cmodel, out pointsCoordinate);
-                        var pointsDrawing = points.TransformPointsInModelToViewDrawing(pointsCoordinate, cmodel, viewBase as tsd.View);
-                        if (pointsDrawing.Count == 6)
-                        {
-                            var p_mark1 = pointsDrawing[2];
-                            var p_mark2 = pointsDrawing[3];
-                            var midPoint = p_mark1.MidPoint(p_mark2);
-                            var dir = p_mark1.CreateVector(p_mark2);
-                            var normal = dir.Cross(new tsg.Vector(0,0,1)).VectorNormalize();
-                            var pointInsert = midPoint.Tranform(normal * extend * (-1));
-                            var p_along_mark_1 = p_mark1.Rotate(pointInsert, angle);
-                            var p_along_mark_2 = p_mark2.Rotate(pointInsert, angle);
+            var midPoint = p_mark1.MidPoint(p_mark2);
+            var dir = p_mark1.CreateVector(p_mark2);
+            var normal = new tsg.Vector(-dir.Y, dir.X, 0).VectorNormalize();
+            var pointInsert = midPoint.Tranform(normal * extend);
+            var p_along_mark_1 = p_mark1.Rotate(pointInsert, angle);
+            var p_along_mark_2 = p_mark2.Rotate(pointInsert, angle);
 
-                            var placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+            var placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
 
-                            //Setting mark ready use
-                            var parkMark = new tsd.Mark(dModelObj);
-                            parkMark.ConfigMarkSetting(booleanPart, markType, prefix);
-                            parkMark.Placing = placingBase;
-                            parkMark.InsertionPoint = pointInsert;
-                            parkMark.Insert();
-                        }
-                    }
-                }
-            });
-            cmodel.CommitChanges();
+            //Setting mark ready use
+            var parkMark = new tsd.Mark(drawingModel);
+            parkMark.ConfigMarkSetting(booleanPart, markType, prefix);
+            parkMark.Placing = placingBase;
+            parkMark.InsertionPoint = pointInsert;
+            parkMark.Insert();
         }
         public static void CreatePartMark(
             this tsd.ModelObject modelObjectInDrawing,

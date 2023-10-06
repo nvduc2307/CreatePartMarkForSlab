@@ -82,7 +82,7 @@ namespace CreatePartMarkForSlab
             {
                 _slabExtendMark = value;
                 if (_slabExtendMark.IsDefaultValue())
-                    _slabExtendMark = 200;
+                    _slabExtendMark = 0;
                 OnPropertyChanged();
             }
         }

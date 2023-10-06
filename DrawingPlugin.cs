@@ -1,12 +1,12 @@
-﻿using System;
+﻿using CreatePartMarkForSlab.Utils;
+using System;
 using System.Collections.Generic;
 using Tekla.Structures.Drawing.Tools;
 using Tekla.Structures.Plugins;
 using TeklaDev;
 using tsd = Tekla.Structures.Drawing;
+using tsg = Tekla.Structures.Geometry3d;
 using tsm = Tekla.Structures.Model;
-using TD = Tekla.Structures.Datatype;
-using System.Linq;
 
 namespace CreatePartMarkForSlab
 {
@@ -22,8 +22,7 @@ namespace CreatePartMarkForSlab
         //config slab mark
         private string _slabmarktype = MarkSetting.PROFILE;
         private string _slabprefix = MarkSetting.TEXT;
-        private bool _slabprefixaction = true;
-        private double _slabExtendMark = 200.0;
+        private double _slabExtendMark = 0.0;
         private double _slabAngleMark = 0.0;
 
         #endregion
@@ -87,8 +86,39 @@ namespace CreatePartMarkForSlab
                     var extendMark = _slabExtendMark;
                     var angleMark = _slabAngleMark;
 
-                    viewBase.CreatePartMark(cmodel, typeMark, prefix, extendMark, angleMark);
-                    cmodel.CommitChanges();
+                    var booleanParts = cmodel.GetBooleanPartsInModel(tsm.BooleanPart.BooleanTypeEnum.BOOLEAN_CUT);
+                    var booleanPartsCount = booleanParts.Count;
+                    if (booleanPartsCount > 0)
+                    {
+                        booleanParts.ForEach(booleanPart =>
+                        {
+                            var modelPark = booleanPart.Father as tsm.Part;
+                            var drawingObjEnum = viewBase.GetModelObjects(modelPark.Identifier);
+                            tsd.Part drawingModel = null;
+                            while (drawingObjEnum.MoveNext()) 
+                            {
+                                if (drawingObjEnum.Current != null)
+                                {
+                                    drawingModel = drawingObjEnum.Current as tsd.Part;
+                                }
+                            }
+                            tsg.CoordinateSystem pointsCoordinate = null;
+                            var points = booleanPart.GetPointOnTopShellFace(cmodel, out pointsCoordinate);
+                            var pointsDrawing = points.TransformPointsInModelToViewDrawing(pointsCoordinate, cmodel, viewBase as tsd.View);
+                            if (pointsDrawing.Count == 6)
+                            {
+                                var p_mark1 = pointsDrawing[2];
+                                var p_mark2 = pointsDrawing[3];
+                                drawingModel?.CreatePartMark(booleanPart, p_mark1, p_mark2, typeMark, prefix, extendMark, angleMark);
+                            }
+                            else
+                            {
+                                var p_mark1 = pointsDrawing[13];
+                                var p_mark2 = pointsDrawing[7];
+                                drawingModel?.CreatePartMark(booleanPart, p_mark1, p_mark2, typeMark, prefix, extendMark, angleMark);
+                            }
+                        });
+                    }
                 }
             }
             catch (Exception)
@@ -114,7 +144,7 @@ namespace CreatePartMarkForSlab
             if (IsDefaultValue(_slabprefix))
                 _slabprefix = MarkSetting.TEXT;
             if (IsDefaultValue(_slabExtendMark))
-                _slabExtendMark = 200.0;
+                _slabExtendMark = 0.0;
             if (IsDefaultValue(_slabAngleMark))
                 _slabAngleMark = 0.0;
         }
