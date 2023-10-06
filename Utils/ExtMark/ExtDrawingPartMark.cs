@@ -30,20 +30,20 @@ namespace TeklaDev
                         var pointsDrawing = points.TransformPointsInModelToViewDrawing(pointsCoordinate, cmodel, viewBase as tsd.View);
                         if (pointsDrawing.Count == 6)
                         {
-                            var p_mark1 = pointsDrawing[1];
-                            var p_mark2 = pointsDrawing[2];
+                            var p_mark1 = pointsDrawing[2];
+                            var p_mark2 = pointsDrawing[3];
                             var midPoint = p_mark1.MidPoint(p_mark2);
                             var dir = p_mark1.CreateVector(p_mark2);
-                            var normal = dir.Cross(new tsg.Vector(0,0,1));
+                            var normal = dir.Cross(new tsg.Vector(0,0,1)).VectorNormalize();
                             var pointInsert = midPoint.Tranform(normal * extend * (-1));
                             var p_along_mark_1 = p_mark1.Rotate(pointInsert, angle);
                             var p_along_mark_2 = p_mark2.Rotate(pointInsert, angle);
 
-                            var placingBase = new AlongLinePlacing(p_mark1, p_mark2);
+                            var placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
 
                             //Setting mark ready use
                             var parkMark = new tsd.Mark(dModelObj);
-                            parkMark.ConfigMarkSetting(markType, prefix);
+                            parkMark.ConfigMarkSetting(booleanPart, markType, prefix);
                             parkMark.Placing = placingBase;
                             parkMark.InsertionPoint = pointInsert;
                             parkMark.Insert();
@@ -51,6 +51,7 @@ namespace TeklaDev
                     }
                 }
             });
+            cmodel.CommitChanges();
         }
         public static void CreatePartMark(
             this tsd.ModelObject modelObjectInDrawing,
@@ -79,8 +80,6 @@ namespace TeklaDev
                 out PartCenterPoint);
 
             var modelObject = GetModelObjectFromDrawingModelObject(cmodel, modelObjectInDrawing);
-            //var values = new Hashtable();
-            //modelObject.GetStringUserProperties(ref values);
 
             var distance1 = PartTopLeft.DistancePToP(PartTopRight);
             var distance2 = PartTopLeft.DistancePToP(PartBotLeft);
@@ -193,7 +192,7 @@ namespace TeklaDev
 
             //Setting mark ready use
             var parkMark = new tsd.Mark(modelObjectInDrawing);
-            parkMark.ConfigMarkSetting(markType, prefix);
+            //parkMark.ConfigMarkSetting(booleanPart, markType, prefix);
             parkMark.Placing = placingBase;
             parkMark.InsertionPoint = pointInsert;
             parkMark.Insert();

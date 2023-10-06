@@ -95,7 +95,7 @@ namespace CreatePartMarkForSlab.Utils
             var savePlane = cmodel.GetWorkPlaneHandler().GetCurrentTransformationPlane();
             cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(new tsm.TransformationPlane(booleanPart.GetCoordinateSystem()));
             booleanPart.Select();
-            cmodel.CommitChanges();
+
             var father = booleanPart.Father as tsm.Part;
             var solid1 = father.GetSolid(tsm.Solid.SolidCreationTypeEnum.RAW);
             var solid2 = father.GetSolid(tsm.Solid.SolidCreationTypeEnum.NORMAL);

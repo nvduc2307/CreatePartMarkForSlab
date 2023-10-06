@@ -13,7 +13,6 @@ namespace CreatePartMarkForSlab
         private string _slabmarktype;
         private string _slabprefix;
         private bool _slabprefixaction;
-        private int _slabLocationIndex;
         private double _slabExtendMark;
         private double _slabAngleMark;
         #endregion
@@ -24,11 +23,9 @@ namespace CreatePartMarkForSlab
         {
             get => new List<string>()
             {
-                MarkType.ASSEMBLY_POSITION.ToString(),
-                MarkType.ASSEMBLY_POSITION_PROFILE.ToString(),
-                MarkType.PROFILE.ToString(),
-                MarkType.PANEL_NAME.ToString(),
-                MarkType.TEXT.ToString(),
+                MarkSetting.PROFILE,
+                MarkSetting.PANEL_NAME,
+                MarkSetting.TEXT,
             };
         }
 
@@ -40,7 +37,7 @@ namespace CreatePartMarkForSlab
             {
                 _slabmarktype = value;
                 if (string.IsNullOrEmpty(_slabmarktype))
-                    _slabmarktype = MarkType.ASSEMBLY_POSITION_PROFILE.ToString();
+                    _slabmarktype = MarkSetting.PROFILE;
                 switch (_slabmarktype)
                 {
                     case MarkSetting.TEXT:
@@ -62,7 +59,7 @@ namespace CreatePartMarkForSlab
             {
                 _slabprefix = value;
                 if (string.IsNullOrEmpty(_slabprefix))
-                    _slabprefix = MarkType.TEXT.ToString();
+                    _slabprefix = MarkSetting.TEXT;
                 OnPropertyChanged();
             }
         }
@@ -77,19 +74,6 @@ namespace CreatePartMarkForSlab
             }
         }
 
-        [StructuresDialog("slablocationindex", typeof(TD.Integer))]
-        public int Slablocationindex
-        {
-            get { return _slabLocationIndex; }
-            set
-            {
-                _slabLocationIndex = value;
-                if (_slabLocationIndex.IsDefaultValue())
-                    _slabLocationIndex = 1;
-                OnPropertyChanged();
-            }
-        }
-
         [StructuresDialog("slabextendmark", typeof(TD.Double))]
         public double Slabextendmark
         {
@@ -98,7 +82,7 @@ namespace CreatePartMarkForSlab
             {
                 _slabExtendMark = value;
                 if (_slabExtendMark.IsDefaultValue())
-                    _slabExtendMark = 0;
+                    _slabExtendMark = 200;
                 OnPropertyChanged();
             }
         }

@@ -1,5 +1,5 @@
-﻿using Tekla.Structures.Drawing;
-using tsd = Tekla.Structures.Drawing;
+﻿using tsd = Tekla.Structures.Drawing;
+using tsm = Tekla.Structures.Model;
 
 namespace TeklaDev
 {
@@ -11,51 +11,48 @@ namespace TeklaDev
     }
     public enum MarkType
     {
-        ASSEMBLY_POSITION,
-        ASSEMBLY_POSITION_PROFILE,
         PROFILE,
-        TEXT,
-        PANEL_NAME
+        PANEL_NAME,
+        TEXT
     }
     public static class MarkSetting
     {
-        public const string ASSEMBLY_POSITION = "ASSEMBLY_POSITION";
-        public const string ASSEMBLY_POSITION_PROFILE = "ASSEMBLY_POSITION_PROFILE";
         public const string PROFILE = "PROFILE";
+        public const string PANEL_NAME = "PANEL NAME";
         public const string TEXT = "TEXT";
-        public const string PANEL_NAME = "PANEL_NAME";
 
-        public static void ConfigMarkSetting(this tsd.Mark mark, MarkType markType, string text = "")
+        public static void ConfigMarkSetting(this tsd.Mark mark,tsm.BooleanPart booleanPart, MarkType markType, string text = "")
         {
+            var panelName = "";
+            booleanPart.GetUserProperty("PANEL NAME", ref panelName);
             mark.Attributes.Content.Clear();
             switch (markType)
             {
-                case MarkType.ASSEMBLY_POSITION:
-                    mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.ASSEMBLY_POSITION));
-                    break;
-                case MarkType.ASSEMBLY_POSITION_PROFILE:
-                    mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.ASSEMBLY_POSITION));
-                    mark.Attributes.Content.Add(new TextElement("("));
-                    mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.PROFILE));
-                    mark.Attributes.Content.Add(new TextElement(")"));
-                    break;
                 case MarkType.PROFILE:
-                    mark.Attributes.Content.Add(new TextElement("("));
-                    mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.PROFILE));
-                    mark.Attributes.Content.Add(new TextElement(")"));
+                    mark.Attributes.Content.Add(new tsd.TextElement("("));
+                    mark.Attributes.Content.Add(new tsd.UserDefinedElement(ExtUDA.PROFILE));
+                    mark.Attributes.Content.Add(new tsd.TextElement(")"));
                     break;
                 case MarkType.TEXT:
                     if (!string.IsNullOrEmpty(text))
                     {
-                        mark.Attributes.Content.Add(new TextElement(text));
+                        mark.Attributes.Content.Add(new tsd.TextElement(text));
                     }
                     else
                     {
-                        mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.NAME));
+                        mark.Attributes.Content.Add(new tsd.UserDefinedElement(ExtUDA.NAME));
                     }
                     break;
                 case MarkType.PANEL_NAME:
-                    mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.PANEL_NAME));
+                    //mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.PANEL_NAME));
+                    if (!string.IsNullOrEmpty(panelName))
+                    {
+                        mark.Attributes.Content.Add(new tsd.TextElement(panelName));
+                    }
+                    else
+                    {
+                        mark.Attributes.Content.Add(new tsd.TextElement(PANEL_NAME));
+                    }
                     break;
             }
         }
@@ -65,12 +62,6 @@ namespace TeklaDev
             var result = MarkType.PANEL_NAME;
             switch (markSettingName)
             {
-                case MarkSetting.ASSEMBLY_POSITION:
-                    result = MarkType.ASSEMBLY_POSITION;
-                    break;
-                case MarkSetting.ASSEMBLY_POSITION_PROFILE:
-                    result = MarkType.ASSEMBLY_POSITION_PROFILE;
-                    break;
                 case MarkSetting.PROFILE:
                     result = MarkType.PROFILE;
                     break;
@@ -91,12 +82,6 @@ namespace TeklaDev
             var result = "";
             switch (markType) 
             { 
-                case MarkType.ASSEMBLY_POSITION:
-                    result = MarkSetting.ASSEMBLY_POSITION;
-                    break;
-                case MarkType.ASSEMBLY_POSITION_PROFILE:
-                    result = MarkSetting.ASSEMBLY_POSITION_PROFILE;
-                    break;
                 case MarkType.PROFILE:
                     result = MarkSetting.PROFILE;
                     break;

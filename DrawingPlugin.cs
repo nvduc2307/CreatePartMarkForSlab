@@ -20,11 +20,10 @@ namespace CreatePartMarkForSlab
         private DataStructure _data;
 
         //config slab mark
-        private string _slabmarktype = MarkType.ASSEMBLY_POSITION_PROFILE.ToString();
-        private string _slabprefix = MarkType.TEXT.ToString();
+        private string _slabmarktype = MarkSetting.PROFILE;
+        private string _slabprefix = MarkSetting.TEXT;
         private bool _slabprefixaction = true;
-        private int _slabLocationIndex = 0;
-        private double _slabExtendMark = 0.0;
+        private double _slabExtendMark = 200.0;
         private double _slabAngleMark = 0.0;
 
         #endregion
@@ -83,28 +82,12 @@ namespace CreatePartMarkForSlab
                 var view = viewBase as tsd.View;
                 if (view != null)
                 {
-                    //var beams = view.GetBeamsInDrawingAtView(cmodel, tsm.Beam.BeamTypeEnum.BEAM);
-                    //var walls = view.GetBeamsInDrawingAtView(cmodel, tsm.Beam.BeamTypeEnum.PANEL);
-                    var slabs = view.GetSlabsInDrawingAtView(cmodel, tsm.ContourPlate.ContourPlateTypeEnum.SLAB);
-                    //beams.ForEach(beam =>
-                    //{
-                    //    beam.CreatePartMark(cmodel, viewBase, ExtDrawingPartMark.PointInsertMark.MiddlePart, MarkType.ASSEMBLY_POSITION_PROFILE);
-                    //});
-                    //walls.ForEach(wall =>
-                    //{
-                    //    wall.CreatePartMark(cmodel, viewBase, ExtDrawingPartMark.PointInsertMark.MiddlePart, MarkType.ASSEMBLY_POSITION_PROFILE);
-                    //});
                     var typeMark = _slabmarktype.TransformTextToMarkType();
                     var prefix = _slabprefix;
-                    var locationMark = _slabLocationIndex.TransformIntToLocationMark();
                     var extendMark = _slabExtendMark;
                     var angleMark = _slabAngleMark;
 
                     viewBase.CreatePartMark(cmodel, typeMark, prefix, extendMark, angleMark);
-                    //slabs.ForEach(slab =>
-                    //{
-                    //    slab.CreatePartMark(cmodel, viewBase, locationMark, typeMark, prefix, extendMark, angleMark);
-                    //});
                     cmodel.CommitChanges();
                 }
             }
@@ -124,17 +107,14 @@ namespace CreatePartMarkForSlab
             _slabprefix = _data.slabprefix;
             _slabExtendMark = _data.slabextendmark;
             _slabAngleMark = _data.slabanglemark;
-            _slabLocationIndex = _data.slablocationindex;
 
             //slab
             if (IsDefaultValue(_slabmarktype))
-                _slabmarktype = MarkType.ASSEMBLY_POSITION_PROFILE.ToString();
+                _slabmarktype = MarkSetting.PROFILE;
             if (IsDefaultValue(_slabprefix))
-                _slabprefix = MarkType.TEXT.ToString();
-            if (IsDefaultValue(_slabLocationIndex))
-                _slabLocationIndex = 0;
+                _slabprefix = MarkSetting.TEXT;
             if (IsDefaultValue(_slabExtendMark))
-                _slabExtendMark = 0.0;
+                _slabExtendMark = 200.0;
             if (IsDefaultValue(_slabAngleMark))
                 _slabAngleMark = 0.0;
         }

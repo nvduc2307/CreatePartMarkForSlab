@@ -38,7 +38,6 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel 
                         Grid.Row="0" 
@@ -117,42 +116,6 @@
                             <Label
                                 Grid.Column="0"
                                 Width="100"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Content="Mark Location"/>
-                            <StackPanel 
-                                Grid.Column="1" 
-                                VerticalAlignment="Center" 
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                                <UIControls:WpfFilterCheckBox
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    AttributeName="slablocationmark" />
-                                <ComboBox
-                                    x:Name="slablocationmark"
-                                    Width="200"
-                                    VerticalAlignment="Center"
-                                    HorizontalContentAlignment="Left"
-                                    SelectedIndex="{Binding Path=Slablocationindex, Mode=TwoWay}">
-                                    <TextBlock Text="TopPart" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="MiddlePart" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="BottomPart" HorizontalAlignment="Left"/>
-                                </ComboBox>
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-                    <StackPanel 
-                    Grid.Row="3" 
-                    Orientation="Horizontal">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Label
-                                Grid.Column="0"
-                                Width="100"
                                 Height="30"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
@@ -176,7 +139,7 @@
                         </Grid>
                     </StackPanel>
                     <StackPanel 
-                        Grid.Row="4" 
+                        Grid.Row="3" 
                         Orientation="Horizontal">
                         <Grid>
                             <Grid.ColumnDefinitions>

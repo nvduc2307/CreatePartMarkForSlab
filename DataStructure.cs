@@ -12,9 +12,6 @@ namespace CreatePartMarkForSlab
         [StructuresField("slabprefix")]
         public string slabprefix;
 
-        [StructuresField("slablocationindex")]
-        public int slablocationindex;
-
         [StructuresField("slabextendmark")]
         public double slabextendmark;
 
