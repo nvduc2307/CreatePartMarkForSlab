@@ -14,7 +14,7 @@ using System.Windows.Controls;
 
 namespace DirectionFloorPlugin
 {
-	[Plugin("DirectionFloorPlugin")]
+	[Plugin("Slab Direction")]
 	[PluginUserInterface("DirectionFloorPlugin.MainWindow")]
 	public class DirectionFloorPlugin : PluginBase
 	{
@@ -69,10 +69,10 @@ namespace DirectionFloorPlugin
 						directionShort = floorInfor.LocalLong;
 						break;
 					case 2://Global X
-						directionShort = new t3d.Vector(1, 0, 0).ProjectToPlane(floorInfor.Plane);
+						directionShort = TeklaVectorExtension.GlobalX.RayToPlane(TeklaVectorExtension.GlobalZ, floorInfor.Plane);
 						break;
 					case 3://Global Y
-						directionShort = new t3d.Vector(0, 1, 0).ProjectToPlane(floorInfor.Plane);
+						directionShort = TeklaVectorExtension.GlobalY.RayToPlane(TeklaVectorExtension.GlobalZ, floorInfor.Plane);
 						break;
 				}
 

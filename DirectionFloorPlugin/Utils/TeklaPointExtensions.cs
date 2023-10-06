@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Interop;
+using System.Xml.Serialization;
 using Tekla.Structures.Geometry3d;
 using Tekla.Structures.Model;
 
@@ -37,6 +38,19 @@ namespace DirectionFloorPlugin.Utils
 				result += ps[i];
 			}
 			result = result.Divide(ps.Count);
+			return result;
+		}
+
+		public static Point RayToPlane(this Point point, Vector vecRay, GeometricPlane plane)
+		{
+			Point result = null;
+			var ori = plane.Origin;
+			var normal = plane.Normal.GetNormal();
+			if (vecRay.Dot(normal) != 0)
+			{
+				var dist = (ori - point).AsVector().Dot(normal) / (vecRay.Dot(normal));
+				result = point.Add(vecRay.GetNormal(), dist);
+			}
 			return result;
 		}
 
