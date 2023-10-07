@@ -78,5 +78,20 @@ namespace TeklaDev
             cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(savePlane);
             return pointsDrawing;
         }
+        public static tsg.Point Get2PHasDistanceMax(this List<tsg.Point> polygons, out tsg.Point pResult2)
+        {
+            //polygons la tap hop cac diem khep kin
+            var lines = new List<tsg.LineSegment>();
+            var pointsCount = polygons.Count;
+            for (int i = 0; i < pointsCount - 1; i++)
+            {
+                lines.Add(new tsg.LineSegment(polygons[i], polygons[i + 1]));
+            }
+            var lineResult = lines
+                .OrderBy(x=>x.Length())
+                .LastOrDefault();
+            pResult2 = lineResult.Point2;
+            return lineResult.Point1;
+        }
     }
 }

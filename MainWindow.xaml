@@ -86,7 +86,7 @@
                                 Height="30"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Content="Prefix" />
+                                Content="Custom Mark" />
                             <StackPanel 
                                 Grid.Column="1"
                                 Orientation="Horizontal">

@@ -10,7 +10,8 @@ using tsm = Tekla.Structures.Model;
 
 namespace CreatePartMarkForSlab
 {
-    [Plugin("CreatePartMarkForSlab")]
+    [Plugin("Slab Mark Symbol")]
+    [pl]
     [PluginUserInterface("CreatePartMarkForSlab.MainWindow")]
     public class CreatePartMarkForSlab : DrawingPluginBase
     {
@@ -37,6 +38,7 @@ namespace CreatePartMarkForSlab
             get => _dHandler;
         }
         #endregion
+
         #region Constructor
         public CreatePartMarkForSlab(DataStructure data)
         {
@@ -96,8 +98,8 @@ namespace CreatePartMarkForSlab
                     {
                         booleanParts.ForEach(booleanPart =>
                         {
-                            var modelPark = booleanPart.Father as tsm.Part;
-                            var drawingObjEnum = viewBase.GetModelObjects(modelPark.Identifier);
+                            var modelPart = booleanPart.Father as tsm.Part;
+                            var drawingObjEnum = viewBase.GetModelObjects(modelPart.Identifier);
                             tsd.Part drawingModel = null;
                             while (drawingObjEnum.MoveNext()) 
                             {
@@ -109,18 +111,10 @@ namespace CreatePartMarkForSlab
                             tsg.CoordinateSystem pointsCoordinate = null;
                             var points = booleanPart.GetPointOnTopShellFace(cmodel, out pointsCoordinate);
                             var pointsDrawing = points.TransformPointsInModelToViewDrawing(pointsCoordinate, cmodel, viewBase as tsd.View);
-                            if (pointsDrawing.Count == 6)
-                            {
-                                var p_mark1 = pointsDrawing[2];
-                                var p_mark2 = pointsDrawing[3];
-                                drawingModel?.CreatePartMark(booleanPart, p_mark1, p_mark2, typeMark, prefix, extendMark, angleMark);
-                            }
-                            else
-                            {
-                                var p_mark1 = pointsDrawing[13];
-                                var p_mark2 = pointsDrawing[7];
-                                drawingModel?.CreatePartMark(booleanPart, p_mark1, p_mark2, typeMark, prefix, extendMark, angleMark);
-                            }
+
+                            tsg.Point p_mark1, p_mark2;
+                            p_mark1 = pointsDrawing.Get2PHasDistanceMax(out p_mark2);
+                            drawingModel?.CreatePartMark(booleanPart, p_mark1, p_mark2, typeMark, prefix, extendMark, angleMark);
                         });
                     }
                 }

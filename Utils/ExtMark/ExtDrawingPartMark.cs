@@ -30,11 +30,21 @@ namespace TeklaDev
             var placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
 
             //Setting mark ready use
+            var retateObjs = drawingModel.GetRelatedObjects();
+            while(retateObjs.MoveNext())
+            {
+                if (retateObjs.Current != null)
+                {
+                    if (retateObjs.Current is tsd.Mark mark) mark.Delete(); // check isExisted mark => true => delete
+                }
+            }
+            //create new mark
             var parkMark = new tsd.Mark(drawingModel);
-            parkMark.ConfigMarkSetting(booleanPart, markType, prefix);
+            parkMark.ConfigMarkSetting(drawingModel, markType, prefix);
             parkMark.Placing = placingBase;
             parkMark.InsertionPoint = pointInsert;
             parkMark.Insert();
+
         }
         public static void CreatePartMark(
             this tsd.ModelObject modelObjectInDrawing,

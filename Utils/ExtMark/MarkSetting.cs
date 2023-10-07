@@ -21,10 +21,11 @@ namespace TeklaDev
         public const string PANEL_NAME = "PANEL NAME";
         public const string TEXT = "TEXT";
 
-        public static void ConfigMarkSetting(this tsd.Mark mark,tsm.BooleanPart booleanPart, MarkType markType, string text = "")
+        public static void ConfigMarkSetting(this tsd.Mark mark, tsd.ModelObject drawingModel, MarkType markType, string text = "")
         {
             var panelName = "";
-            booleanPart.GetUserProperty("PANEL NAME", ref panelName);
+            drawingModel.GetUserProperty("PANEL NAME", ref panelName);
+
             mark.Attributes.Content.Clear();
             switch (markType)
             {
@@ -44,10 +45,9 @@ namespace TeklaDev
                     }
                     break;
                 case MarkType.PANEL_NAME:
-                    //mark.Attributes.Content.Add(new UserDefinedElement(ExtUDA.PANEL_NAME));
                     if (!string.IsNullOrEmpty(panelName))
                     {
-                        mark.Attributes.Content.Add(new tsd.TextElement(panelName));
+                        mark.Attributes.Content.Add(new tsd.UserDefinedElement(ExtUDA.PANEL_NAME));
                     }
                     else
                     {
