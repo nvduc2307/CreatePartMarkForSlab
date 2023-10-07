@@ -1,0 +1,4 @@
+﻿///Build with Admin
+xcopy $(TargetDir)$(TargetName).dll "C:\Program Files\Tekla Structures\2022.0\bin\plugins\Tekla" /R /E /H /C /I /K /D /Y
+///
+xcopy "$(TargetDir)$(TargetName).dll" "C:\ProgramData\Trimble\Tekla Structures\2022.0\Environments\common\extensions\Wings\" /F /Y
