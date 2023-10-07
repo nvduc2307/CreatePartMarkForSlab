@@ -11,7 +11,6 @@ using tsm = Tekla.Structures.Model;
 namespace CreatePartMarkForSlab
 {
     [Plugin("Slab Mark Symbol")]
-    [pl]
     [PluginUserInterface("CreatePartMarkForSlab.MainWindow")]
     public class CreatePartMarkForSlab : DrawingPluginBase
     {
