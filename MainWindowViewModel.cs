@@ -15,6 +15,7 @@ namespace CreatePartMarkForSlab
         private bool _slabprefixaction;
         private double _slabExtendMark;
         private double _slabAngleMark;
+        private int _isApplyFor;
         #endregion
 
         #region Properties
@@ -96,6 +97,19 @@ namespace CreatePartMarkForSlab
                 _slabAngleMark = value;
                 if (_slabAngleMark.IsDefaultValue())
                     _slabAngleMark = 0;
+                OnPropertyChanged();
+            }
+        }
+
+        [StructuresDialog("isApplyFor", typeof(TD.Integer))]
+        public int IsApplyFor
+        {
+            get => _isApplyFor;
+            set
+            {
+                _isApplyFor = value;
+                if (_isApplyFor.IsDefaultValue())
+                    _isApplyFor = 0;
                 OnPropertyChanged();
             }
         }
