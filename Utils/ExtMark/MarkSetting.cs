@@ -23,9 +23,6 @@ namespace TeklaDev
 
         public static void ConfigMarkSetting(this tsd.Mark mark, tsd.ModelObject drawingModel, MarkType markType, string text = "")
         {
-            var panelName = "";
-            drawingModel.GetUserProperty("PANEL NAME", ref panelName);
-
             mark.Attributes.Content.Clear();
             switch (markType)
             {
@@ -45,14 +42,7 @@ namespace TeklaDev
                     }
                     break;
                 case MarkType.PANEL_NAME:
-                    if (!string.IsNullOrEmpty(panelName))
-                    {
-                        mark.Attributes.Content.Add(new tsd.UserDefinedElement(ExtUDA.PANEL_NAME));
-                    }
-                    else
-                    {
-                        mark.Attributes.Content.Add(new tsd.TextElement(PANEL_NAME));
-                    }
+                    mark.Attributes.Content.Add(new tsd.UserDefinedElement(ExtUDA.PANEL_NAME));
                     break;
             }
         }

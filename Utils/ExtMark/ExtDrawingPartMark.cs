@@ -1,8 +1,4 @@
-﻿using CreatePartMarkForSlab.Utils;
-using System.Collections.Generic;
-using Tekla.Structures.Drawing;
-using Tekla.Structures.Model;
-using tsd = Tekla.Structures.Drawing;
+﻿using tsd = Tekla.Structures.Drawing;
 using tsg = Tekla.Structures.Geometry3d;
 using tsm = Tekla.Structures.Model;
 
@@ -12,7 +8,6 @@ namespace TeklaDev
     {
         public static void CreatePartMark(
             this tsd.ModelObject drawingModel,
-            BooleanPart booleanPart,
             tsg.Point p_mark1,
             tsg.Point p_mark2,
             MarkType markType,
@@ -27,11 +22,11 @@ namespace TeklaDev
             var p_along_mark_1 = p_mark1.Rotate(pointInsert, angle);
             var p_along_mark_2 = p_mark2.Rotate(pointInsert, angle);
 
-            var placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+            var placingBase = new tsd.AlongLinePlacing(p_along_mark_1, p_along_mark_2);
 
             //Setting mark ready use
             var retateObjs = drawingModel.GetRelatedObjects();
-            while(retateObjs.MoveNext())
+            while (retateObjs.MoveNext())
             {
                 if (retateObjs.Current != null)
                 {
@@ -93,7 +88,7 @@ namespace TeklaDev
                             pointInsert = topmid.Tranform(vt1 * extend);
                             p_along_mark_1 = PartTopRight.Rotate(pointInsert, angle);
                             p_along_mark_2 = PartBotRight.Rotate(pointInsert, angle);
-                            placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+                            placingBase = new tsd.AlongLinePlacing(p_along_mark_1, p_along_mark_2);
                         }
                         else
                         {
@@ -101,7 +96,7 @@ namespace TeklaDev
                             pointInsert = topmid.Tranform(vt2 * extend * (-1));
                             p_along_mark_1 = PartTopLeft.Rotate(pointInsert, angle);
                             p_along_mark_2 = PartTopRight.Rotate(pointInsert, angle);
-                            placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+                            placingBase = new tsd.AlongLinePlacing(p_along_mark_1, p_along_mark_2);
                         }
                         break;
                     case LocationMark.MiddlePart:
@@ -110,14 +105,14 @@ namespace TeklaDev
                             pointInsert = PartCenterPoint.Tranform(vt1 * extend);
                             p_along_mark_1 = PartTopLeft.Rotate(pointInsert, angle);
                             p_along_mark_2 = PartBotLeft.Rotate(pointInsert, angle);
-                            placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+                            placingBase = new tsd.AlongLinePlacing(p_along_mark_1, p_along_mark_2);
                         }
                         else
                         {
                             pointInsert = PartCenterPoint.Tranform(vt2 * extend * (-1));
                             p_along_mark_1 = PartTopLeft.Rotate(pointInsert, angle);
                             p_along_mark_2 = PartTopRight.Rotate(pointInsert, angle);
-                            placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+                            placingBase = new tsd.AlongLinePlacing(p_along_mark_1, p_along_mark_2);
                         }
                         break;
                     case LocationMark.BottomPart:
@@ -127,7 +122,7 @@ namespace TeklaDev
                             pointInsert = botmid.Tranform(vt1 * extend);
                             p_along_mark_1 = PartTopLeft.Rotate(pointInsert, angle);
                             p_along_mark_2 = PartBotLeft.Rotate(pointInsert, angle);
-                            placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+                            placingBase = new tsd.AlongLinePlacing(p_along_mark_1, p_along_mark_2);
                         }
                         else
                         {
@@ -135,7 +130,7 @@ namespace TeklaDev
                             pointInsert = botmid.Tranform(vt2 * extend * (-1));
                             p_along_mark_1 = PartBotLeft.Rotate(pointInsert, angle);
                             p_along_mark_2 = PartBotRight.Rotate(pointInsert, angle);
-                            placingBase = new AlongLinePlacing(p_along_mark_1, p_along_mark_2);
+                            placingBase = new tsd.AlongLinePlacing(p_along_mark_1, p_along_mark_2);
                         }
                         break;
                 }
@@ -148,12 +143,12 @@ namespace TeklaDev
                         if (distance1 > distance2)
                         {
                             pointInsert = GetInsertionPoint(PartTopLeft, PartTopRight);
-                            placingBase = new AlongLinePlacing(PartTopLeft, PartTopRight);
+                            placingBase = new tsd.AlongLinePlacing(PartTopLeft, PartTopRight);
                         }
                         else
                         {
                             pointInsert = GetInsertionPoint(PartTopLeft, PartBotLeft);
-                            placingBase = new AlongLinePlacing(PartTopLeft, PartBotLeft);
+                            placingBase = new tsd.AlongLinePlacing(PartTopLeft, PartBotLeft);
                         }
                         break;
                     case LocationMark.MiddlePart:
@@ -161,23 +156,23 @@ namespace TeklaDev
 
                         if (distance1 > distance2)
                         {
-                            placingBase = new AlongLinePlacing(PartTopLeft, PartTopRight);
+                            placingBase = new tsd.AlongLinePlacing(PartTopLeft, PartTopRight);
                         }
                         else
                         {
-                            placingBase = new AlongLinePlacing(PartTopLeft, PartBotLeft);
+                            placingBase = new tsd.AlongLinePlacing(PartTopLeft, PartBotLeft);
                         }
                         break;
                     case LocationMark.BottomPart:
                         if (distance1 > distance2)
                         {
                             pointInsert = GetInsertionPoint(PartBotLeft, PartBotRight);
-                            placingBase = new AlongLinePlacing(PartBotLeft, PartBotRight);
+                            placingBase = new tsd.AlongLinePlacing(PartBotLeft, PartBotRight);
                         }
                         else
                         {
                             pointInsert = GetInsertionPoint(PartBotLeft, PartTopLeft);
-                            placingBase = new AlongLinePlacing(PartBotLeft, PartTopLeft);
+                            placingBase = new tsd.AlongLinePlacing(PartBotLeft, PartTopLeft);
                         }
                         break;
                 }
@@ -185,7 +180,6 @@ namespace TeklaDev
 
             //Setting mark ready use
             var parkMark = new tsd.Mark(modelObjectInDrawing);
-            //parkMark.ConfigMarkSetting(booleanPart, markType, prefix);
             parkMark.Placing = placingBase;
             parkMark.InsertionPoint = pointInsert;
             parkMark.Insert();

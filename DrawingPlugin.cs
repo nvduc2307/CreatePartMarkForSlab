@@ -7,6 +7,7 @@ using TeklaDev;
 using tsd = Tekla.Structures.Drawing;
 using tsg = Tekla.Structures.Geometry3d;
 using tsm = Tekla.Structures.Model;
+using tsdui = Tekla.Structures.Drawing.UI;
 
 namespace CreatePartMarkForSlab
 {
@@ -24,6 +25,7 @@ namespace CreatePartMarkForSlab
         private string _slabprefix = MarkSetting.TEXT;
         private double _slabExtendMark = 0.0;
         private double _slabAngleMark = 0.0;
+        private int _isApplyFor = 0;
 
         #endregion
 
@@ -54,12 +56,29 @@ namespace CreatePartMarkForSlab
             {
                 var dHandle = new tsd.DrawingHandler();
                 var pick = dHandle.GetPicker();
-                var tuple = pick.PickObject("Pick Part In View Action");
+                var tuple = pick.PickObject("Pick Slab In View Action");
                 var objectdrawing = tuple.Item1;
+
                 while (!objectdrawing.GetType().Equals(typeof(tsd.Part)))
                 {
-                    tuple = pick.PickObject("Pick Part In View Action");
+                    tuple = pick.PickObject("Pick Slab In View Action");
                     objectdrawing = tuple.Item1;
+                }
+
+
+                while (objectdrawing.GetType().Equals(typeof(tsd.Part)))
+                {
+                    var dObj = objectdrawing as tsd.Part;
+                    var mObj = dObj.GetMObjFormDObj(new tsm.Model());
+                    if (mObj.GetType() != typeof(tsm.ContourPlate))
+                    {
+                        tuple = pick.PickObject("Pick Slab In View Action");
+                        objectdrawing = tuple.Item1;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
                 return new List<InputDefinition>
                 {
@@ -70,6 +89,7 @@ namespace CreatePartMarkForSlab
             {
                 return new List<InputDefinition>();
             }
+            
         }
 
         public override bool Run(List<InputDefinition> inputs)
@@ -82,49 +102,58 @@ namespace CreatePartMarkForSlab
                 var savePlane = cmodel.GetWorkPlaneHandler().GetCurrentTransformationPlane();
                 cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(new tsm.TransformationPlane());
 
-                var viewBase = InputDefinitionFactory.GetView(inputs[0]) as tsd.ViewBase;
-                var view = viewBase as tsd.View;
-                if (view != null)
+                var viewBase = InputDefinitionFactory.GetView(inputs[0]);
+                if (viewBase == null) return false;
+
+                var dObj = InputDefinitionFactory.GetDrawingObject(inputs[0]) as tsd.Part;
+                var typeMark = _slabmarktype.TransformTextToMarkType();
+                var prefix = _slabprefix;
+                var extendMark = _slabExtendMark;
+                var angleMark = _slabAngleMark;
+
+                var booleanParts = new List<tsm.BooleanPart>();
+                if (_isApplyFor == 0)
                 {
-                    var typeMark = _slabmarktype.TransformTextToMarkType();
-                    var prefix = _slabprefix;
-                    var extendMark = _slabExtendMark;
-                    var angleMark = _slabAngleMark;
-
-                    var booleanParts = cmodel.GetBooleanPartsInModel(tsm.BooleanPart.BooleanTypeEnum.BOOLEAN_CUT);
-                    var booleanPartsCount = booleanParts.Count;
-                    if (booleanPartsCount > 0)
+                    var mObj = dObj.GetMObjFormDObj(cmodel);
+                    booleanParts = mObj.GetBooleanPartsInModel();
+                }
+                else
+                {
+                    booleanParts = cmodel.GetBooleanPartsInModel(tsm.BooleanPart.BooleanTypeEnum.BOOLEAN_CUT);
+                }
+                var booleanPartsCount = booleanParts.Count;
+                if (booleanPartsCount > 0)
+                {
+                    booleanParts.ForEach(booleanPart =>
                     {
-                        booleanParts.ForEach(booleanPart =>
+                        var modelPart = booleanPart.Father as tsm.Part;
+                        var drawingObjEnum = viewBase.GetModelObjects(modelPart.Identifier);
+                        tsd.Part drawingModelObj = null;
+                        while (drawingObjEnum.MoveNext())
                         {
-                            var modelPart = booleanPart.Father as tsm.Part;
-                            var drawingObjEnum = viewBase.GetModelObjects(modelPart.Identifier);
-                            tsd.Part drawingModel = null;
-                            while (drawingObjEnum.MoveNext()) 
+                            if (drawingObjEnum.Current != null)
                             {
-                                if (drawingObjEnum.Current != null)
-                                {
-                                    drawingModel = drawingObjEnum.Current as tsd.Part;
-                                }
+                                drawingModelObj = drawingObjEnum.Current as tsd.Part;
                             }
-                            tsg.CoordinateSystem pointsCoordinate = null;
-                            var points = booleanPart.GetPointOnTopShellFace(cmodel, out pointsCoordinate);
-                            var pointsDrawing = points.TransformPointsInModelToViewDrawing(pointsCoordinate, cmodel, viewBase as tsd.View);
+                        }
+                        tsg.CoordinateSystem pointsCoordinate = null;
+                        var points = ExtBooleanPart.GetPointOnTopShellFace(cmodel, booleanPart, out pointsCoordinate);
+                        var pointsDrawing = points.TransformPointsInModelToViewDrawing(pointsCoordinate, cmodel, viewBase as tsd.View);
 
-                            tsg.Point p_mark1, p_mark2;
-                            p_mark1 = pointsDrawing.Get2PHasDistanceMax(out p_mark2);
-                            drawingModel?.CreatePartMark(booleanPart, p_mark1, p_mark2, typeMark, prefix, extendMark, angleMark);
-                        });
-                    }
+                        tsg.Point p_mark1, p_mark2;
+                        p_mark1 = pointsDrawing.Get2PHasDistanceMax(out p_mark2);
+                        drawingModelObj?.CreatePartMark(p_mark1, p_mark2, typeMark, prefix, extendMark, angleMark);
+                    });
                 }
                 cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(savePlane);
+                return true;
             }
             catch (Exception)
             {
                 //MessageBox.Show(Exc.ToString());
+                return false;
             }
 
-            return true;
         }
         #endregion
 
@@ -135,6 +164,7 @@ namespace CreatePartMarkForSlab
             _slabprefix = _data.slabprefix;
             _slabExtendMark = _data.slabextendmark;
             _slabAngleMark = _data.slabanglemark;
+            _isApplyFor = _data.isApplyFor;
 
             //slab
             if (IsDefaultValue(_slabmarktype))
@@ -145,6 +175,8 @@ namespace CreatePartMarkForSlab
                 _slabExtendMark = 0.0;
             if (IsDefaultValue(_slabAngleMark))
                 _slabAngleMark = 0.0;
+            if (IsDefaultValue(_isApplyFor))
+                _isApplyFor = 0;
         }
         #endregion
     }

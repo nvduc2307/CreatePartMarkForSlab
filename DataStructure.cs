@@ -17,5 +17,8 @@ namespace CreatePartMarkForSlab
 
         [StructuresField("slabanglemark")]
         public double slabanglemark;
+
+        [StructuresField("isApplyFor")]
+        public int isApplyFor;
     }
 }

@@ -87,11 +87,14 @@ namespace TeklaDev
             {
                 lines.Add(new tsg.LineSegment(polygons[i], polygons[i + 1]));
             }
-            var lineResult = lines
+            var lineResults = lines
                 .OrderBy(x=>x.Length())
-                .LastOrDefault();
-            pResult2 = lineResult.Point2;
-            return lineResult.Point1;
+                .ToList();
+            var lineSelected = pointsCount < 8
+                ? lineResults.LastOrDefault()
+                : lineResults[pointsCount - 3];
+            pResult2 = lineSelected.Point2;
+            return lineSelected.Point1;
         }
     }
 }

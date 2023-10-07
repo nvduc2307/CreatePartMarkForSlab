@@ -7,7 +7,12 @@
         xmlns:tsd="clr-namespace:Tekla.Structures.Dialog;assembly=Tekla.Structures.Dialog"
         xmlns:local="clr-namespace:CreatePartMarkForSlab"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="550">
+        Title="Slab Mark Symbol" 
+        ResizeMode="NoResize"
+        Height="300"
+        Width="600"
+        MaxHeight="300" 
+        MaxWidth="600">
     <d:UserControl.DataContext>
         <local:MainWindowViewModel/>
     </d:UserControl.DataContext>
@@ -23,15 +28,12 @@
             Margin="0,0,0,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top" />
-        <Grid Name="MainContent" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0" />
-                <ColumnDefinition Width="0"/>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+        <StackPanel Name="MainContent" 
+              Grid.Row="1"
+              Margin="10, 0, 10, 0">
             <GroupBox 
                 Header="Setting Slab Mark"
-                Grid.Column="2">
+                Grid.Column="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -40,6 +42,10 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
                     <StackPanel 
                         Grid.Row="0" 
                         Orientation="Horizontal">
@@ -64,10 +70,10 @@
                                     AttributeName="slabmarktype" />
                                 <ComboBox
                                     x:Name="slabmarktype"
-                                    Width="200"
+                                    Width="120"
                                     VerticalAlignment="Center"
                                     ItemsSource="{Binding Slabmarktypes}"
-                                    SelectedValue="{Binding Path=Slabmarktype, Mode=TwoWay}">
+                                    SelectedValue="{Binding Path=Slabmarktype, Mode=TwoWay}">   
                                 </ComboBox>
                             </StackPanel>
                         </Grid>
@@ -96,7 +102,7 @@
                                     AttributeName="slabprefix" />
                                 <TextBox
                                     x:Name="slabprefix"
-                                    Width="200"
+                                    Width="120"
                                     Height="23"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
@@ -107,7 +113,8 @@
                         </Grid>
                     </StackPanel>
                     <StackPanel 
-                        Grid.Row="2" 
+                        Grid.Row="0"
+                        Grid.Column="1"
                         Orientation="Horizontal">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -130,7 +137,7 @@
                                     AttributeName="slabextendmark" />
                                 <TextBox
                                     x:Name="slabextendmark"
-                                    Width="200"
+                                    Width="120"
                                     Height="23"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
@@ -140,7 +147,8 @@
                         </Grid>
                     </StackPanel>
                     <StackPanel 
-                        Grid.Row="3" 
+                        Grid.Row="1" 
+                        Grid.Column="1"
                         Orientation="Horizontal">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -163,7 +171,7 @@
                                     AttributeName="slabanglemark" />
                                 <TextBox
                                     x:Name="slabanglemark"
-                                    Width="200"
+                                    Width="120"
                                     Height="23"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
@@ -172,9 +180,42 @@
                             </StackPanel>
                         </Grid>
                     </StackPanel>
+                    <StackPanel 
+                        Grid.Row="4" 
+                        Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Width="100"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="Apply For"/>
+                            <StackPanel 
+                                Grid.Column="1" 
+                                VerticalAlignment="Center" 
+                                Orientation="Horizontal">
+                                <UIControls:WpfFilterCheckBox
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    AttributeName="isApplyFor" />
+                                <ComboBox
+                                    x:Name="isApplyFor"
+                                    Width="120"
+                                    VerticalAlignment="Center"
+                                    SelectedIndex="{Binding Path=IsApplyFor, Mode=TwoWay}">
+                                    <TextBlock Text="Slab selected."/>
+                                    <TextBlock Text="All slabs in selected view."/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
                 </Grid>
             </GroupBox>
-        </Grid>
+        </StackPanel>
         <UIControls:WpfOkApplyModifyGetOnOffCancel
             Grid.Row="2"
             ApplyClicked="WPFOkApplyModifyGetOnOffCancel_ApplyClicked"

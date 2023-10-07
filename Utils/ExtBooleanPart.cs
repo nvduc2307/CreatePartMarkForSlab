@@ -12,6 +12,36 @@ namespace CreatePartMarkForSlab.Utils
 {
     public static class ExtBooleanPart
     {
+        /// <summary>
+        /// modelObjTobeCut is father BooleanPart
+        /// modelObjCut is BooleanOperativeOBJ (cut)
+        /// Shell là phần bị cắt
+        /// GetPointOnTopShellFace() => số lượng phần tử chẵn
+        /// </summary>
+        /// <param name="modelObjTobeCut"></param>
+        /// <param name="modelObjCut"></param>
+        /// 
+        
+        public static List<tsm.BooleanPart> GetBooleanPartsInModel(this tsm.Part part)
+        {
+            var results = new List<tsm.BooleanPart>();
+            var relateobjs = part.GetBooleans();
+            while (relateobjs.MoveNext())
+            {
+                if (relateobjs.Current != null)
+                {
+                    if (relateobjs.Current is tsm.BooleanPart booleanPart)
+                    {
+                        if (booleanPart.Type == BooleanPart.BooleanTypeEnum.BOOLEAN_CUT)
+                        {
+                            results.Add(booleanPart);
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+
         public static List<tsm.BooleanPart> GetBooleanPartsInModel(
             this tsm.Model cmodel,
             tsm.BooleanPart.BooleanTypeEnum booleanTypeEnum,
@@ -43,14 +73,7 @@ namespace CreatePartMarkForSlab.Utils
             }
             return booleanParts;
         }
-        /// <summary>
-        /// modelObjTobeCut is father BooleanPart
-        /// modelObjCut is BooleanOperativeOBJ (cut)
-        /// Shell là phần bị cắt
-        /// GetPointOnTopShellFace() => số lượng phần tử chẵn
-        /// </summary>
-        /// <param name="modelObjTobeCut"></param>
-        /// <param name="modelObjCut"></param>
+
         public static tsm.BooleanPart CreatePartCut(
             this tsm.Part modelObjTobeCut, 
             tsm.Part modelObjCut)
@@ -62,6 +85,7 @@ namespace CreatePartMarkForSlab.Utils
             modelObjCut.Delete();
             return booleanPart;
         }
+
         public static List<tsg.Point> GetPointsOfBooleanPart(this tsm.BooleanPart booleanPart)
         {
             var father = booleanPart.Father as tsm.Part;
@@ -86,11 +110,14 @@ namespace CreatePartMarkForSlab.Utils
             }
             return results;
         }
+
         public static List<tsg.Point> GetPointOnTopShellFace(
-            this tsm.BooleanPart booleanPart, 
-            tsm.Model cmodel, 
+            tsm.Model cmodel,
+            tsm.BooleanPart booleanPart, 
             out tsg.CoordinateSystem booleanPartCoordinateSystem)
         {
+            //point at local TransformationPlane (note)
+
             booleanPartCoordinateSystem = booleanPart.GetCoordinateSystem();
             var savePlane = cmodel.GetWorkPlaneHandler().GetCurrentTransformationPlane();
             cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(new tsm.TransformationPlane(booleanPart.GetCoordinateSystem()));
@@ -147,12 +174,14 @@ namespace CreatePartMarkForSlab.Utils
             cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(savePlane);
             return results;
         }
+
         public static List<tsg.Point> GeneratePointsOnTopShellFace(
-            this tsm.BooleanPart booleanPart,
+            tsm.BooleanPart booleanPart,
             tsm.Model cmodel,
             out tsg.CoordinateSystem booleanPartCoordinateSystem)
         {
-            var PointsOnTopShellFace = booleanPart.GetPointOnTopShellFace(cmodel, out booleanPartCoordinateSystem);
+            //point at local TransformationPlane (note)
+            var PointsOnTopShellFace = GetPointOnTopShellFace(cmodel, booleanPart, out booleanPartCoordinateSystem);
             var results = new List<tsg.Point>();
             var count = PointsOnTopShellFace.Count;
             if (count % 2 == 0)
