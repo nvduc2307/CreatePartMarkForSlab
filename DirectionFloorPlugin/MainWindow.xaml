@@ -9,7 +9,7 @@
     xmlns:UIControls="clr-namespace:Tekla.Structures.Dialog.UIControls;assembly=Tekla.Structures.Dialog"
     mc:Ignorable="d"
     ResizeMode="NoResize"
-    Height="300" Width="600"
+    Height="270" Width="560"
     Title="Slab Direction"
     >
     <d:Window.DataContext>
@@ -127,6 +127,9 @@
             GetClicked="WPFOkApplyModifyGetOnOffCancel_GetClicked"
             ModifyClicked="WPFOkApplyModifyGetOnOffCancel_ModifyClicked"
             OkClicked="WPFOkApplyModifyGetOnOffCancel_OkClicked"
-            OnOffClicked="WPFOkApplyModifyGetOnOffCancel_OnOffClicked" />
+            OnOffClicked="WPFOkApplyModifyGetOnOffCancel_OnOffClicked" 
+            Width="555"            
+            HorizontalAlignment="Left"
+            />
     </Grid>
 </tsd:PluginWindowBase>

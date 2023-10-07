@@ -92,6 +92,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PostBuiltEvent.txt" />
     <Content Include="Resources\element_catalog_cross_section.bmp" />
     <Content Include="Resources\element_catalog_cross_section_sketch.bmp" />
     <Content Include="Resources\element_catalog_cross_section_user.bmp" />
@@ -117,6 +118,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)$(TargetName).dll "C:\Program Files\Tekla Structures\2022.0\bin\plugins\Tekla" /R /E /H /C /I /K /D /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetDir)$(TargetName).dll" "C:\ProgramData\Trimble\Tekla Structures\2022.0\Environments\common\extensions\Wings\" /F /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
