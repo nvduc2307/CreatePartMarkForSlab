@@ -77,6 +77,10 @@ namespace CreatePartMarkForSlab
             {
                 GetValuesFromDialog();
                 var cmodel = new tsm.Model();
+
+                var savePlane = cmodel.GetWorkPlaneHandler().GetCurrentTransformationPlane();
+                cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(new tsm.TransformationPlane());
+
                 var viewBase = InputDefinitionFactory.GetView(inputs[0]) as tsd.ViewBase;
                 var view = viewBase as tsd.View;
                 if (view != null)
@@ -120,6 +124,7 @@ namespace CreatePartMarkForSlab
                         });
                     }
                 }
+                cmodel.GetWorkPlaneHandler().SetCurrentTransformationPlane(savePlane);
             }
             catch (Exception)
             {

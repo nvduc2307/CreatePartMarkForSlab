@@ -23,7 +23,7 @@ namespace TeklaDev
             var midPoint = p_mark1.MidPoint(p_mark2);
             var dir = p_mark1.CreateVector(p_mark2);
             var normal = new tsg.Vector(-dir.Y, dir.X, 0).VectorNormalize();
-            var pointInsert = midPoint.Tranform(normal * extend);
+            var pointInsert = midPoint.Tranform(normal * (extend + 200));
             var p_along_mark_1 = p_mark1.Rotate(pointInsert, angle);
             var p_along_mark_2 = p_mark2.Rotate(pointInsert, angle);
 
