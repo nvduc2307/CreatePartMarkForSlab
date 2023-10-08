@@ -92,12 +92,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PluginThumbnail\et_element_DirectionFloorPlugin%28Original%29.bmp" />
     <Content Include="PostBuiltEvent.txt" />
     <Content Include="Resources\element_catalog_cross_section.bmp" />
     <Content Include="Resources\element_catalog_cross_section_sketch.bmp" />
     <Content Include="Resources\element_catalog_cross_section_user.bmp" />
-    <Content Include="PluginThumbnail\et_element_DirectionFloorPlugin.bmp" />
+    <Content Include="PluginThumbnail\et_element_Slab Direction.bmp" />
     <Content Include="Resources\prtyp_tree_1.bmp" />
     <Content Include="Resources\prtyp_tree_10.bmp" />
     <Content Include="Resources\prtyp_tree_11.bmp" />
