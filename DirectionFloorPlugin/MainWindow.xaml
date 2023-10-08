@@ -9,7 +9,7 @@
     xmlns:UIControls="clr-namespace:Tekla.Structures.Dialog.UIControls;assembly=Tekla.Structures.Dialog"
     mc:Ignorable="d"
     ResizeMode="NoResize"
-    Height="270" Width="560"
+    Height="210" Width="560"
     Title="Slab Direction"
     >
     <d:Window.DataContext>
@@ -31,19 +31,24 @@
             />
 
         <!--Body-->
-        <StackPanel Grid.Row="1" Margin="10">
-            <StackPanel Orientation="Horizontal">
-                <Label
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <Label
                     Width="100"
                     Height="30"                   
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Content="Direction:" />
-                <UIControls:WpfFilterCheckBox
+                    <UIControls:WpfFilterCheckBox
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     AttributeName="direction" />
-                <ComboBox
+                    <ComboBox
                     x:Name="cbbDirection"
                     Width="150"
                     Height="23"
@@ -51,24 +56,24 @@
                     VerticalAlignment="Center"                  
                     SelectedIndex="{Binding DirectionIndex, Mode=TwoWay}"
                     >
-                    <TextBlock Text="Slab Short Direction" TextAlignment="Center"/>
-                    <TextBlock Text="Slab Long Direction" TextAlignment="Center"/>
-                    <TextBlock Text="Global X" TextAlignment="Center"/>
-                    <TextBlock Text="Global Y" TextAlignment="Center"/>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label
+                        <TextBlock Text="Slab Short Direction" TextAlignment="Center"/>
+                        <TextBlock Text="Slab Long Direction" TextAlignment="Center"/>
+                        <TextBlock Text="Global X" TextAlignment="Center"/>
+                        <TextBlock Text="Global Y" TextAlignment="Center"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label
                     Width="100"
                     Height="30"                   
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Content="Type:" />
-                <UIControls:WpfFilterCheckBox
+                    <UIControls:WpfFilterCheckBox
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     AttributeName="type" />
-                <ComboBox
+                    <ComboBox
                     x:Name="cbbType"
                     Width="150"
                     Height="23"
@@ -76,49 +81,52 @@
                     VerticalAlignment="Center"
                     SelectedIndex="{Binding TypeIndex, Mode=TwoWay}"
                     >
-                    <TextBlock Text="One Way" TextAlignment="Center"/>
-                    <TextBlock Text="Two Way" TextAlignment="Center"/>
-                </ComboBox>
+                        <TextBlock Text="One Way" TextAlignment="Center"/>
+                        <TextBlock Text="Two Way" TextAlignment="Center"/>
+                    </ComboBox>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label
-                    Width="100"
-                    Height="30"                   
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Content="Angle:" />
-                <UIControls:WpfFilterCheckBox
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    AttributeName="angle" />
-                <TextBox
-                    Width="150"
-                    Height="23"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Text="{Binding Angle, Mode=TwoWay}"
-                    TextWrapping="Wrap" />
+            <StackPanel Grid.Column="1" Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <Label
+                        Width="100"
+                        Height="30"                   
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Content="Angle:" />
+                    <UIControls:WpfFilterCheckBox
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        AttributeName="angle" />
+                    <TextBox
+                        Width="100"
+                        Height="23"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="{Binding Angle, Mode=TwoWay}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label
+                        Width="100"
+                        Height="30"                   
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Content="Slab Name:" />
+                    <UIControls:WpfFilterCheckBox
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        AttributeName="slabname"/>
+                    <TextBox
+                        Width="100"
+                        Height="23"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="{Binding SlabName, Mode=TwoWay}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label
-                    Width="100"
-                    Height="30"                   
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Content="Slab Name:" />
-                <UIControls:WpfFilterCheckBox
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    AttributeName="slabname"/>
-                <TextBox
-                    Width="150"
-                    Height="23"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Text="{Binding SlabName, Mode=TwoWay}"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-        </StackPanel>
+        </Grid>
 
         <UIControls:WpfOkApplyModifyGetOnOffCancel
             Grid.Row="2"    
