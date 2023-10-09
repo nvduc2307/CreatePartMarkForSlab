@@ -90,9 +90,9 @@ namespace TeklaDev
             var lineResults = lines
                 .OrderBy(x=>x.Length())
                 .ToList();
-            var lineSelected = pointsCount < 8
+            var lineSelected = pointsCount < 12
                 ? lineResults.LastOrDefault()
-                : lineResults[pointsCount - 3];
+                : lineResults[pointsCount - 2];
             pResult2 = lineSelected.Point2;
             return lineSelected.Point1;
         }
