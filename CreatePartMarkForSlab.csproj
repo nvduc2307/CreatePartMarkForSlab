@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Resource Include="PluginThumbnail\et_element_Slab Mark Symbol.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\prtyp_tree_9.bmp" />
